@@ -1,0 +1,575 @@
+{
+	"info": {
+		"_postman_id": "f2546ffb-4bd5-4c89-9552-2aa0f84e2100",
+		"name": "Lendsqr QA Assessment",
+		"description": "**Task 2:** Access the external APIs from Task 1 and create automated test scripts for at least 2 APIs per API module documented, excluding the Oraculi Mobile SDK (Beta) module.\n\nThe automated test scripts should include:\n\n- Validation for the HTTP status codes\n    \n- Validation for the response message",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48173220",
+		"_collection_link": "https://duruihemequeeneth-1194737.postman.co/workspace/1e971f26-1e69-497d-85be-e3ac3650b4dc/collection/48173220-f2546ffb-4bd5-4c89-9552-2aa0f84e2100?action=share&source=collection_link&creator=48173220"
+	},
+	"item": [
+		{
+			"name": "Signup Module",
+			"item": [
+				{
+					"name": "POST Onboard - Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test 1: Validate HTTP Status Code is 200 for successful onboarding\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Test 2: Validate the response structure indicates success\r",
+									"pm.test(\"Response indicates successful onboarding\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.status).to.eql(\"success\");\r",
+									"    pm.expect(jsonData.message).to.eql(\"Successful\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Lenders Motto\",\r\n    \"password\": \"LTester@50\",\r\n    \"email\": \"lendersmottotester34@yahoo.com\",\r\n    \"business_name\": \"Motto Bizwiz\",\r\n    \"phone_number\": \"2348112348765\",\r\n    \"locale\": \"en-GB\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://vigil.lendsqr.com/pecunia/api/v2/onboard",
+							"protocol": "https",
+							"host": [
+								"vigil",
+								"lendsqr",
+								"com"
+							],
+							"path": [
+								"pecunia",
+								"api",
+								"v2",
+								"onboard"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Onboard - Duplicate Email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Negative Test: Validate HTTP Status Code is 400 for duplicate email\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"// Test 2: Validate the error response structure\r",
+									"pm.test(\"Response indicates an invalid email error\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.status).to.eql(\"error\");\r",
+									"    pm.expect(jsonData.message).to.include(\"incorrect\"); // Checks for \"incorrect\" in the message\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Lenders Motto\",\r\n    \"password\": \"LTester@50\",\r\n    \"email\": \"duruihemequeeneth@gmail.com\",\r\n    \"business_name\": \"Motto Bizwiz\",\r\n    \"phone_number\": \"2348112348765\",\r\n    \"locale\": \"en-GB\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://vigil.lendsqr.com/pecunia/api/v2/onboard",
+							"protocol": "https",
+							"host": [
+								"vigil",
+								"lendsqr",
+								"com"
+							],
+							"path": [
+								"pecunia",
+								"api",
+								"v2",
+								"onboard"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoint URL: [https://vigil.lendsqr.com/pecunia/api/v2/onboard](https://vigil.lendsqr.com/pecunia/api/v2/onboard)\n\nAutomated Test Cases:\n\n- Valid Data - Positive\n    \n- Duplicate Email - Negative"
+		},
+		{
+			"name": "Login Module",
+			"item": [
+				{
+					"name": "POST Login - Wrong Password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Negative Test: Validate HTTP Status Code is 400 for failed login\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"// Test 2: Validate the error response for incorrect credentials\r",
+									"pm.test(\"Response indicates invalid login\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.status).to.eql(\"error\");\r",
+									"    pm.expect(jsonData.message).to.eql(\"Incorrect login credentials.\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"duruihemequeeneth@gmail.com\",\r\n    \"password\": \"LenMottostest@67\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://vigil.lendsqr.com/pecunia/api/v2/auth/admin/login",
+							"protocol": "https",
+							"host": [
+								"vigil",
+								"lendsqr",
+								"com"
+							],
+							"path": [
+								"pecunia",
+								"api",
+								"v2",
+								"auth",
+								"admin",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoint URL: [https://vigil.lendsqr.com/pecunia/api/v2/auth/admin/login](https://vigil.lendsqr.com/pecunia/api/v2/auth/admin/login)\n\nAutomated Test Cases:\n\n- Valid Credentials - Positive\n    \n- Invalid Credentials - Negative"
+		},
+		{
+			"name": "API Key Retrieval Module",
+			"item": [
+				{
+					"name": "POST Login - Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test 1: Validate HTTP Status Code is 200\r",
+									"pm.test(\"Status code is 200\", function () { \r",
+									"    pm.response.to.have.status(200);\r",
+									"    let responseData = pm.response.json();\r",
+									"    pm.environment.set(\"login_token\", responseData.data.loginKey);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Referer",
+								"value": "https://app.adjutor.io/",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Source",
+								"value": "YWRqdXRvcg==",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"duruihemequeeneth@gmail.com\",\r\n    \"password\": \"JackInBox@25\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://vigil.lendsqr.com/pecunia/api/v2/auth/admin/login",
+							"protocol": "https",
+							"host": [
+								"vigil",
+								"lendsqr",
+								"com"
+							],
+							"path": [
+								"pecunia",
+								"api",
+								"v2",
+								"auth",
+								"admin",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2FA",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () { \r",
+									"    let responseData = pm.response.json();\r",
+									"    pm.environment.set(\"token\", responseData.data.token);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"loginKey\": \"{{login_token}}\",\r\n    \"token\": \"776228\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://vigil.lendsqr.com/pecunia/api/v2/auth/admin/login/2fa",
+							"protocol": "https",
+							"host": [
+								"vigil",
+								"lendsqr",
+								"com"
+							],
+							"path": [
+								"pecunia",
+								"api",
+								"v2",
+								"auth",
+								"admin",
+								"login",
+								"2fa"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET APP List (Task 2)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test 1: Validate HTTP Status Code is 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Test 2: Validate the response structure indicates success\r",
+									"pm.test(\"Response indicates success\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.status).to.eql(\"success\");\r",
+									"    pm.expect(jsonData.message).to.eql(\"success\");\r",
+									"});\r",
+									"\r",
+									"// Test 3: Validate the apps array exists and has at least one item\r",
+									"pm.test(\"Apps list is returned\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.data.apps).to.be.an('array').that.is.not.empty;\r",
+									"});\r",
+									"\r",
+									"// Test 4: Validate the specific app details (Capital Cash)\r",
+									"pm.test(\"Capital Cash app details are correct\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var firstApp = jsonData.data.apps[0];\r",
+									"    pm.expect(firstApp.name).to.eql(\"Capital Cash\");\r",
+									"    pm.expect(firstApp.status).to.eql(\"active\");\r",
+									"    pm.expect(firstApp.services).to.be.an('array').that.is.not.empty;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://vigil.lendsqr.com/pecunia/api/v1/admin/adjutor/apps?page=0&limit=10",
+							"protocol": "https",
+							"host": [
+								"vigil",
+								"lendsqr",
+								"com"
+							],
+							"path": [
+								"pecunia",
+								"api",
+								"v1",
+								"admin",
+								"adjutor",
+								"apps"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET APP List - Negative Test Case(Task 2)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Negative Test: Validate HTTP Status Code is 401 for unauthorized request\r",
+									"pm.test(\"Status code is 401 Unauthorized\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"// Validate the error response structure\r",
+									"pm.test(\"Response indicates an error\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.status).to.eql(\"error\");\r",
+									"    pm.expect(jsonData.message).to.include(\"Unauthorized\"); // Checks for any form of \"Unauthorized\" in the message\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "P5cuQ6v3lkTdZQzejgeEE0VHcD2sf2xaXTDH1P5R",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://vigil.lendsqr.com/pecunia/api/v1/admin/adjutor/apps?page=0&limit=10",
+							"protocol": "https",
+							"host": [
+								"vigil",
+								"lendsqr",
+								"com"
+							],
+							"path": [
+								"pecunia",
+								"api",
+								"v1",
+								"admin",
+								"adjutor",
+								"apps"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoint URL: [https://vigil.lendsqr.com/pecunia/api/v1/admin/adjutor/apps?page=0&amp;limit=10](https://vigil.lendsqr.com/pecunia/api/v1/admin/adjutor/apps?page=0&limit=10)\n\nAutomated Test Cases:\n\n- Authenticated - Positive\n    \n- Unauthorized - Negative"
+		},
+		{
+			"name": "Get data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				},
+				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+			},
+			"response": []
+		},
+		{
+			"name": "Post data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": ""
+				},
+				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "api_key",
+			"value": ""
+		},
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "login_token",
+			"value": ""
+		}
+	]
+}
